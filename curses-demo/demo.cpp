@@ -16,6 +16,12 @@ int main() {
 	printyx("NORMAL", row - 1, 0);
 	// 2 是整个
 	// 5 是半个
+	if (termattrs() & A_BLINK) {
+		printyx("Y", row - 1, col - 1);
+	}
+	else {
+		printyx("N", row - 1, col - 1);
+	}
 	curs_set(2);
 	for (;;) {
 		if ((ch = getch()) == ERR) {
@@ -45,7 +51,9 @@ int main() {
 			//printyx("w", cury, curx);
 			cury = getcury(curscr);
 			curx = getcurx(curscr);
-			addch('A' | A_BOLD);
+			// ACS_BBLOCK 半格
+			attron(A_BLINK);
+			addch(ACS_BLOCK | A_UNDERLINE);
 			move(cury, curx);
 			continue;
 		}
@@ -55,7 +63,6 @@ int main() {
 void printyx(const char *str, int y, int x) {
 	int curx = getcurx(stdscr);
 	int cury = getcury(stdscr);
-	move(y, x);
-	printw(str);
+	mvaddstr(y, x, str);
 	move(cury, curx);
 }
