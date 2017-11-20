@@ -4,6 +4,8 @@
 
 void printyx(const char *str, int y, int x);
 
+WINDOW *win;
+
 int main() {
 	initscr();
 	int ch;
@@ -13,7 +15,14 @@ int main() {
 	//raw();
 	//keypad(stdscr, true);
 	getmaxyx(stdscr, row, col);
-	printyx("NORMAL", row - 2, 0);
+	win = newwin(row, col, 0, 0);
+	if (win == nullptr) {
+		return -1;
+	}
+	if (has_colors()) {
+		start_color();
+	}
+	printyx("NORMAL", row - 2, 1);
 	// 2 是整个
 	// 5 是半个
 	if (termattrs() & A_BLINK) {
@@ -24,48 +33,53 @@ int main() {
 	}
 	printyx("hello world", 10, 10);
 	curs_set(2);
-	scrollok(stdscr, true);
-	box(stdscr, ACS_VLINE, ACS_HLINE);
+	scrollok(win, true);
+	box(win, ACS_VLINE, ACS_HLINE);
+	wmove(win, 1, 1);
 	for (;;) {
-		if ((ch = getch()) == ERR) {
+		if ((ch = wgetch(win)) == ERR) {
 			printyx("ERR", row - 1, 0);
 		}
 		else {
-			int cury = getcury(curscr);
-			int curx = getcurx(curscr);
+			int cury = getcury(win);
+			int curx = getcurx(win);
 			switch (ch)
 			{
 			case 'h':
-				move(cury, curx - 1);
+				wmove(win, cury, curx - 1);
 				break;
 			case 'j':
-				move(cury + 1, curx);
+				if (cury > 10) {
+					scroll(win);
+				}
+				else {
+					wmove(win, cury + 1, curx);
+				}
 				break;
 			case 'k':
-				move(cury - 1, curx);
+				wmove(win, cury - 1, curx);
 				break;
 			case 'l':
-				move(cury, curx + 1);
+				wmove(win, cury, curx + 1);
 				break;
 			default:
 				break;
 			}
-			refresh();
-			//printyx("w", cury, curx);
-			cury = getcury(curscr);
-			curx = getcurx(curscr);
+			wrefresh(win);
+			cury = getcury(win);
+			curx = getcurx(win);
 			// ACS_BBLOCK 半格
-			attron(A_BLINK);
-			addch(ACS_BLOCK | A_UNDERLINE);
-			move(cury, curx);
+			wattron(win, A_BLINK);
+			waddch(win, ACS_BLOCK | A_UNDERLINE);
+			wmove(win, cury, curx);
 			continue;
 		}
 	}
 }
 
 void printyx(const char *str, int y, int x) {
-	int curx = getcurx(stdscr);
-	int cury = getcury(stdscr);
-	mvaddstr(y, x, str);
-	move(cury, curx);
+	int curx = getcurx(win);
+	int cury = getcury(win);
+	mvwaddstr(win, y, x, str);
+	wmove(win, cury, curx);
 }
