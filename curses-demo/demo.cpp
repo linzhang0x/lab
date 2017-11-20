@@ -13,16 +13,19 @@ int main() {
 	//raw();
 	//keypad(stdscr, true);
 	getmaxyx(stdscr, row, col);
-	printyx("NORMAL", row - 1, 0);
+	printyx("NORMAL", row - 2, 0);
 	// 2 是整个
 	// 5 是半个
 	if (termattrs() & A_BLINK) {
-		printyx("Y", row - 1, col - 1);
+		printyx("Y", row - 2, col - 2);
 	}
 	else {
-		printyx("N", row - 1, col - 1);
+		printyx("N", row - 2, col - 2);
 	}
+	printyx("hello world", 10, 10);
 	curs_set(2);
+	scrollok(stdscr, true);
+	box(stdscr, ACS_VLINE, ACS_HLINE);
 	for (;;) {
 		if ((ch = getch()) == ERR) {
 			printyx("ERR", row - 1, 0);
