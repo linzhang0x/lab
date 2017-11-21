@@ -23,8 +23,8 @@ int main() {
 		start_color();
 	}
 	printyx("NORMAL", row - 2, 1);
-	// 2 ÊÇÕû¸ö
-	// 5 ÊÇ°ë¸ö
+	// 2 æ˜¯æ•´ä¸ª
+	// 5 æ˜¯åŠä¸ª
 	if (termattrs() & A_BLINK) {
 		printyx("Y", row - 2, col - 2);
 	}
@@ -68,7 +68,7 @@ int main() {
 			wrefresh(win);
 			cury = getcury(win);
 			curx = getcurx(win);
-			// ACS_BBLOCK °ë¸ñ
+			// ACS_BBLOCK åŠæ ¼
 			wattron(win, A_BLINK);
 			waddch(win, ACS_BLOCK | A_UNDERLINE);
 			wmove(win, cury, curx);
