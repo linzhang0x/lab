@@ -22,7 +22,7 @@ int main() {
 	if (has_colors()) {
 		start_color();
 	}
-	printyx("NORMAL", row - 2, 1);
+	printyx("NORMAL", row - 2, 2);
 	// 2 是整个
 	// 5 是半个
 	if (termattrs() & A_BLINK) {
@@ -35,7 +35,7 @@ int main() {
 	curs_set(2);
 	scrollok(win, true);
 	box(win, ACS_VLINE, ACS_HLINE);
-	wmove(win, 1, 1);
+	wmove(win, 1, 2);
 	for (;;) {
 		if ((ch = wgetch(win)) == ERR) {
 			printyx("ERR", row - 1, 0);
@@ -49,12 +49,7 @@ int main() {
 				wmove(win, cury, curx - 1);
 				break;
 			case 'j':
-				if (cury > 10) {
-					scroll(win);
-				}
-				else {
-					wmove(win, cury + 1, curx);
-				}
+				wmove(win, cury + 1, curx);
 				break;
 			case 'k':
 				wmove(win, cury - 1, curx);
